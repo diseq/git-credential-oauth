@@ -32,7 +32,7 @@ jobs:
             # You can perform additional actions here, e.g., create a release.
 
             git clone -b "$latest_tag" https://github.com/hickford/git-credential-oauth
-            run: echo "BUILD_TAG=true" >> $GITHUB_ENV
+            echo "BUILD_TAG=true" >> $GITHUB_ENV
             
             #git-credential-oauth
             #ls -la
