@@ -28,7 +28,9 @@ jobs:
       - name: Check release for the latest tag
         run: |
           latest_tag=${{ env.LATEST_TAG }}
-          release=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/$latest_tag")
+          #release=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/$latest_tag")
+          release=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/$latest_tag")
+          
           if [[ $release == *"message"*"Not Found"* ]]; then
             echo "Release does not exist for the latest tag $latest_tag."
             # You can perform additional actions here, e.g., create a release.
