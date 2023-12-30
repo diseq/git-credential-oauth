@@ -2,7 +2,7 @@ name: Check Releases
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Run daily at midnight
+    - cron: '0 0 */14 * *'    
   workflow_dispatch:
 
 jobs:
@@ -20,7 +20,6 @@ jobs:
 
       - name: Get the highest version
         id: get-highest-version
-        #run: echo "::set-output name=version::$(git tag -l | sort -V | tail -n 1)"
         run: |        
           latest_tag=$(git for-each-ref --sort=creatordate --format '%(refname:short)' refs/tags | tail -n 1)
           echo "LATEST_TAG=${latest_tag}" >> $GITHUB_ENV          
@@ -28,22 +27,14 @@ jobs:
       - name: Check release for the latest tag
         run: |
           latest_tag=${{ env.LATEST_TAG }}
-          #release=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/$latest_tag")
           release=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/$latest_tag")
           
           if [[ $release == *"message"*"Not Found"* ]]; then
             echo "Release does not exist for the latest tag $latest_tag."
-            # You can perform additional actions here, e.g., create a release.
 
-            #git clone -b "$latest_tag" https://github.com/hickford/git-credential-oauth
-            #git tag "$latest_tag"
             echo "BUILD_TAG=true" >> $GITHUB_ENV
             git checkout "$latest_tag"
-            git remote set-url origin https://github.com/diseq/git-credential-oauth.git
-            
-            #git-credential-oauth
-            #ls -la
-            
+            git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"                        
           else
             echo "Release already exists for the latest tag $latest_tag."
           fi
@@ -62,10 +53,8 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          #args: -f .goreleaser.yaml release --snapshot --clean
           args: -f .goreleaser.yaml release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          #GORELEASER_CURRENT_TAG: ${{ env.LATEST_TAG }}
         if: env.BUILD_TAG == 'true'          
 
