@@ -33,7 +33,8 @@ jobs:
             echo "Release does not exist for the latest tag $latest_tag."
             # You can perform additional actions here, e.g., create a release.
 
-            git clone -b "$latest_tag" https://github.com/hickford/git-credential-oauth
+            #git clone -b "$latest_tag" https://github.com/hickford/git-credential-oauth
+            git tag "$latest_tag"
             echo "BUILD_TAG=true" >> $GITHUB_ENV
             
             #git-credential-oauth
@@ -57,7 +58,8 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: -f .goreleaser.yaml release --snapshot --clean
+          #args: -f .goreleaser.yaml release --snapshot --clean
+          args: -f .goreleaser.yaml release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: env.BUILD_TAG == 'true'          
