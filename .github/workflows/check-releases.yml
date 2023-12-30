@@ -26,7 +26,7 @@ jobs:
           #echo "HIGHEST_VERSION=${highest_version}" >> $GITHUB_ENV          
           #latest_tag=$(git for-each-ref --sort=-taggerdate --format '%(refname:short)' refs/tags | head -n 1)
           #echo "LATEST_TAG=${latest_tag}" >> $GITHUB_ENV
-          latest_tag=$(git for-each-ref --sort=taggerdate --format '%(refname:short)' refs/tags | tail -n 1)
+          latest_tag=$(git for-each-ref --sort=creatordate --format '%(refname:short)' refs/tags | tail -n 1)
           echo "LATEST_TAG=${latest_tag}" >> $GITHUB_ENV          
           
       - name: Check release for the latest tag
