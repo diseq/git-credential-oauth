@@ -36,6 +36,7 @@ jobs:
             #git clone -b "$latest_tag" https://github.com/hickford/git-credential-oauth
             #git tag "$latest_tag"
             echo "BUILD_TAG=true" >> $GITHUB_ENV
+            git checkout "$latest_tag"
             
             #git-credential-oauth
             #ls -la
