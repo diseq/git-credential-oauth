@@ -20,8 +20,12 @@ jobs:
         id: get-highest-version
         #run: echo "::set-output name=version::$(git tag -l | sort -V | tail -n 1)"
         run: |        
-          highest_version=$(git tag -l | grep -Eo '^[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n 1)
-          echo "::set-output name=version::${highest_version}"
+          #highest_version=$(git tag -l | grep -Eo '^[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n 1)
+          #echo "::set-output name=version::${highest_version}"
+          #highest_version=$(git tag -l | grep -Eo '^v?[0-9]+\.[0-9]+\.[0-9]+' | sed 's/^v//;s/v$//' | sort -V | tail -n 1)
+          #echo "HIGHEST_VERSION=${highest_version}" >> $GITHUB_ENV          
+          latest_tag=$(git for-each-ref --sort=-taggerdate --format '%(refname:short)' refs/tags | head -n 1)
+          echo "LATEST_TAG=${latest_tag}" >> $GITHUB_ENV          
           
       - name: Check release for the highest version
         run: |
