@@ -11,10 +11,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          repository: 'hickford/git-credential-oauth'
 
-      - name: Fetch remote tags
-        run: git fetch --tags https://github.com/hickford/git-credential-oauth
+      #- name: Fetch remote tags
+      #  run: git fetch --tags https://github.com/hickford/git-credential-oauth
 
       - name: Get the highest version
         id: get-highest-version
@@ -55,7 +57,8 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: -f git-credential-oauth/.goreleaser.yaml release --clean
+          args: -f .goreleaser.yaml release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: env.BUILD_TAG == 'true'          
 
