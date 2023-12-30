@@ -18,8 +18,11 @@ jobs:
 
       - name: Get the highest version
         id: get-highest-version
-        run: echo "::set-output name=version::$(git tag -l | sort -V | tail -n 1)"
-
+        #run: echo "::set-output name=version::$(git tag -l | sort -V | tail -n 1)"
+        run: |        
+          highest_version=$(git tag -l | grep -Eo '^[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n 1)
+          echo "::set-output name=version::${highest_version}"
+          
       - name: Check release for the highest version
         run: |
           highest_version=${{ steps.get-highest-version.outputs.version }}
