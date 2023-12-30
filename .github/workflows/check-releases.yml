@@ -63,6 +63,6 @@ jobs:
           args: -f .goreleaser.yaml release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GORELEASER_CURRENT_TAG: ${{ env.LATEST_TAG }}
+          #GORELEASER_CURRENT_TAG: ${{ env.LATEST_TAG }}
         if: env.BUILD_TAG == 'true'          
 
