@@ -37,6 +37,7 @@ jobs:
             #git tag "$latest_tag"
             echo "BUILD_TAG=true" >> $GITHUB_ENV
             git checkout "$latest_tag"
+            git remote set-url origin https://github.com/diseq/git-credential-oauth.git
             
             #git-credential-oauth
             #ls -la
