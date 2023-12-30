@@ -16,19 +16,19 @@ jobs:
       - name: Fetch remote tags
         run: git fetch --tags https://github.com/hickford/git-credential-oauth
 
-      - name: List remote tags
-        run: git tag -l
+      - name: Get the highest version
+        id: get-highest-version
+        run: echo "::set-output name=version::$(git tag -l | sort -V | tail -n 1)"
 
-      - name: Check releases for tags
+      - name: Check release for the highest version
         run: |
-          for tag in $(git tag -l); do
-            release=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/$tag")
-            if [[ $release == *"message"*"Not Found"* ]]; then
-              echo "Release does not exist for tag $tag."
-              # You can perform additional actions here, e.g., create a release.
-            else
-              echo "Release already exists for tag $tag."
-            fi
-          done
+          highest_version=${{ steps.get-highest-version.outputs.version }}
+          release=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/$highest_version")
+          if [[ $release == *"message"*"Not Found"* ]]; then
+            echo "Release does not exist for the highest version $highest_version."
+            # You can perform additional actions here, e.g., create a release.
+          else
+            echo "Release already exists for the highest version $highest_version."
+          fi
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
