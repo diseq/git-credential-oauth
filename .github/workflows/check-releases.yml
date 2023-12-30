@@ -27,15 +27,16 @@ jobs:
           latest_tag=$(git for-each-ref --sort=-taggerdate --format '%(refname:short)' refs/tags | head -n 1)
           echo "LATEST_TAG=${latest_tag}" >> $GITHUB_ENV          
           
-      - name: Check release for the highest version
+      - name: Check release for the latest tag
         run: |
-          highest_version=${{ steps.get-highest-version.outputs.version }}
-          release=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/$highest_version")
+          latest_tag=${{ env.LATEST_TAG }}
+          release=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/$latest_tag")
           if [[ $release == *"message"*"Not Found"* ]]; then
-            echo "Release does not exist for the highest version $highest_version."
+            echo "Release does not exist for the latest tag $latest_tag."
             # You can perform additional actions here, e.g., create a release.
           else
-            echo "Release already exists for the highest version $highest_version."
+            echo "Release already exists for the latest tag $latest_tag."
           fi
         env:
+          LATEST_TAG: ${{ env.LATEST_TAG }}
           GITHUB_REPOSITORY: ${{ github.repository }}
