@@ -15,8 +15,8 @@ jobs:
         with:
           repository: 'hickford/git-credential-oauth'
 
-      #- name: Fetch remote tags
-      #  run: git fetch --tags https://github.com/hickford/git-credential-oauth
+      - name: Fetch remote tags
+        run: git fetch --tags https://github.com/hickford/git-credential-oauth
 
       - name: Get the highest version
         id: get-highest-version
