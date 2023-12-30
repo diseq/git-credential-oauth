@@ -1,0 +1,34 @@
+name: Check Releases
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Run daily at midnight
+  workflow_dispatch:
+
+jobs:
+  check-releases:
+    runs-on: ubuntu-latest
+
+    steps:
+      #- name: Checkout code
+      #  uses: actions/checkout@v2
+
+      - name: Fetch remote tags
+        run: git fetch --tags https://github.com/hickford/git-credential-oauth
+
+      - name: List remote tags
+        run: git tag -l
+
+      - name: Check releases for tags
+        run: |
+          for tag in $(git tag -l); do
+            release=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/$tag")
+            if [[ $release == *"message"*"Not Found"* ]]; then
+              echo "Release does not exist for tag $tag."
+              # You can perform additional actions here, e.g., create a release.
+            else
+              echo "Release already exists for tag $tag."
+            fi
+          done
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
