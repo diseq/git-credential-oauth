@@ -57,7 +57,7 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: -f .goreleaser.yaml release --clean
+          args: -f .goreleaser.yaml release --snapshot --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: env.BUILD_TAG == 'true'          
